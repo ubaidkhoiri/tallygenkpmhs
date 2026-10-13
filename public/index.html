@@ -1,0 +1,166 @@
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f8fa" />
+    <title>Monitoring Mahasiswa — Generus Kulon Progo</title>
+    <link rel="stylesheet" href="/css/app.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">GK</div>
+          <div>
+            <h1>Generus Kulon Progo</h1>
+            <p>Monitoring data mahasiswa</p>
+          </div>
+        </div>
+        <div class="live"><span class="dot"></span> DEMO UI</div>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow">Dashboard monitoring</p>
+        <h2>Data mahasiswa,<br />terpantau dalam satu tempat.</h2>
+        <p class="intro">
+          Pantau progres pendataan per desa dan kelompok. Pilih kelompok untuk
+          melihat detail pengiriman data dan riwayat submission.
+        </p>
+      </section>
+
+      <section class="stats" aria-label="Ringkasan progres">
+        <article class="stat primary">
+          <div class="stat-label">Kelompok mengisi</div>
+          <div class="stat-value" id="statDone">18/31</div>
+          <div class="stat-foot" id="statPercent">
+            58% dari seluruh kelompok
+          </div>
+          <div class="progress-track">
+            <span id="mainProgress" style="width: 58%"></span>
+          </div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Belum mengisi</div>
+          <div class="stat-value" id="statPending">13</div>
+          <div class="stat-foot">Perlu ditindaklanjuti</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Total submission</div>
+          <div class="stat-value" id="statSubmissions">24</div>
+          <div class="stat-foot">Termasuk pengiriman lama</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Anomali</div>
+          <div class="stat-value" id="statIssues">2</div>
+          <div class="stat-foot">Perlu dicek admin</div>
+        </article>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h3>Progres per desa</h3>
+          <span class="small-muted">5 desa · 31 kelompok</span>
+        </div>
+        <div class="village-grid" id="villageGrid"></div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h3>Daftar kelompok</h3>
+          <span class="small-muted" id="refreshText"
+            >Demo data · belum tersambung</span
+          >
+        </div>
+        <div class="controls">
+          <div class="search-wrap">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4"></path>
+            </svg>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Cari nama, desa, kelompok…"
+              aria-label="Cari nama, desa, atau kelompok"
+            />
+          </div>
+          <div class="control-row">
+            <select id="villageFilter" aria-label="Filter desa">
+              <option value="">Semua desa</option>
+            </select>
+            <select id="statusFilter" aria-label="Filter status">
+              <option value="">Semua status</option>
+              <option value="done">Sudah mengisi</option>
+              <option value="pending">Belum mengisi</option>
+              <option value="issue">Anomali</option>
+            </select>
+          </div>
+          <select id="sortSelect" aria-label="Urutkan">
+            <option value="village">Urutkan: Desa</option>
+            <option value="newest">Submission terbaru</option>
+            <option value="oldest">Submission terlama</option>
+            <option value="name">Nama kelompok A–Z</option>
+          </select>
+          <button class="btn" id="resetBtn" type="button">Reset</button>
+        </div>
+        <div class="result-bar">
+          <strong id="resultCount">31 kelompok</strong
+          ><span>Ketuk baris untuk detail</span>
+        </div>
+        <div class="group-list" id="groupList" aria-live="polite"></div>
+      </section>
+
+      <div class="footer-note">
+        <strong>Catatan prototipe:</strong> seluruh status, nama pengirim, dan
+        isi data di halaman ini adalah data mock untuk referensi UI. Integrasi
+        produksi harus mengambil submission dari Tally melalui Cloudflare
+        Worker; API key tidak boleh berada di frontend.
+      </div>
+    </main>
+
+    <div
+      class="overlay"
+      id="detailOverlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="detailTitle"
+    >
+      <section class="sheet">
+        <div class="sheet-head">
+          <div>
+            <h3 id="detailTitle">Detail kelompok</h3>
+            <p class="subtitle" id="detailSubtitle"></p>
+          </div>
+          <button
+            class="close"
+            id="closeDetail"
+            type="button"
+            aria-label="Tutup detail"
+          >
+            ×
+          </button>
+        </div>
+        <div id="detailContent"></div>
+        <button
+          class="btn"
+          id="closeDetailBottom"
+          type="button"
+          style="width: 100%; margin-top: 16px"
+        >
+          Tutup detail
+        </button>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

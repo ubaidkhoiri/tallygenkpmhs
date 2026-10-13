@@ -1,0 +1,12 @@
+{
+  "name": "tallygenkpmhs",
+  "main": "src/index.js",
+  "compatibility_date": "2025-03-11",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "triggers": {
+    "crons": ["*/10 * * * *"]
+  }
+}
