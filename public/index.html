@@ -110,6 +110,7 @@
             <option value="name">Nama kelompok A–Z</option>
           </select>
           <button class="btn" id="resetBtn" type="button">Reset</button>
+          <button class="btn primary" id="refreshBtn" type="button">Refresh</button>
         </div>
         <div class="result-bar">
           <strong id="resultCount">31 kelompok</strong
@@ -119,10 +120,9 @@
       </section>
 
       <div class="footer-note">
-        <strong>Catatan prototipe:</strong> seluruh status, nama pengirim, dan
-        isi data di halaman ini adalah data mock untuk referensi UI. Integrasi
-        produksi harus mengambil submission dari Tally melalui Cloudflare
-        Worker; API key tidak boleh berada di frontend.
+        <strong>Catatan data:</strong> angka tampil dari server Worker yang
+        membaca NeonDB. Bila tertulis demo, server belum tersambung dan angka
+        di halaman ini bukan data terbaru.
       </div>
     </main>
 

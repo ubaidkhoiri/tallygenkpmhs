@@ -116,6 +116,37 @@ export default {
         return json({ status: "ok", audit: rows });
       }
     }
+    if (url.pathname.startsWith("/api/groups/") && url.pathname.endsWith("/history")) {
+      if (request.method !== "GET") {
+        return json({ status: "error", message: "method not allowed" }, 405);
+      }
+      const groupId = decodeURIComponent(url.pathname.slice("/api/groups/".length, -"/history".length));
+      try {
+        const data = await buildDashboard(db(env));
+        const group = data.groups.find((g) => g.id === groupId);
+        if (!group) return json({ status: "error", message: "kelompok tak dikenal" }, 404);
+        return json({ status: "ok", group });
+      } catch (e) {
+        return json({ status: "error", message: "gagal baca database" }, 500);
+      }
+    }
+    if (url.pathname.startsWith("/api/submissions/")) {
+      if (request.method !== "GET") {
+        return json({ status: "error", message: "method not allowed" }, 405);
+      }
+      const subId = decodeURIComponent(url.pathname.slice("/api/submissions/".length));
+      if (!subId || subId.includes("/")) {
+        return json({ status: "error", message: "not found" }, 404);
+      }
+      try {
+        const data = await buildDashboard(db(env));
+        const sub = data.submissions.find((s) => s.id === subId);
+        if (!sub) return json({ status: "error", message: "submission tak ditemukan" }, 404);
+        return json({ status: "ok", submission: sub });
+      } catch (e) {
+        return json({ status: "error", message: "gagal baca database" }, 500);
+      }
+    }
     if (url.pathname.startsWith("/api/")) {
       return json({ status: "error", message: "not found" }, 404);
     }

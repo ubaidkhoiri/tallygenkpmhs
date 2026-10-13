@@ -391,17 +391,52 @@ function resetFilters() {
   paint();
 }
 
-// Pakai data remote bila sudah ada submission nyata, mock bila belum.
+const dateTimeFmt = new Intl.DateTimeFormat("id-ID", {
+  day: "numeric",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
+let usingRemote = false;
+let pollTimer = null;
+
+function showToast(msg) {
+  const el = $("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(showToast.t);
+  showToast.t = setTimeout(() => el.classList.remove("show"), 4000);
+}
+
+function markRefresh(ok, fetchedAt) {
+  const when = dateTimeFmt.format(new Date(fetchedAt || Date.now()));
+  $("refreshText").textContent = ok
+    ? `Data terbaru · diperbarui ${when}`
+    : `Gagal muat data terbaru ${when} · tampil ${usingRemote ? "data terakhir" : "data demo"}`;
+}
 function applyRemote(remote) {
   if (!remote || remote.status !== "ok") return false;
   const subs = Array.isArray(remote.submissions) ? remote.submissions : [];
   if (!subs.length) return false;
+  usingRemote = true;
   currentSubmissions = subs;
   allGroups = remote.groups;
   paint();
   const issues = allGroups.filter((g) => g.status === "issue").length;
   $("statIssues").textContent = issues;
   return true;
+}
+
+async function refresh(manual) {
+  const remote = await fetchDashboard();
+  const ok = applyRemote(remote);
+  markRefresh(ok, ok ? remote.fetchedAt : undefined);
+  if (!ok) showToast("Gagal muat data terbaru. Coba lagi.");
+  else if (manual) showToast("Data diperbarui.");
+  return ok;
 }
 
 function init() {
@@ -418,6 +453,7 @@ function init() {
     }),
   );
   $("resetBtn").addEventListener("click", resetFilters);
+  $("refreshBtn").addEventListener("click", () => refresh(true));
   $("closeDetail").addEventListener("click", () =>
     closeDetail($("detailOverlay")),
   );
@@ -430,7 +466,8 @@ function init() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeDetail($("detailOverlay"));
   });
-  fetchDashboard().then(applyRemote);
+  refresh(false);
+  if (!pollTimer) pollTimer = setInterval(() => refresh(false), 30000);
   initMod();
 }
 
