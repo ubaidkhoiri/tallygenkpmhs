@@ -16,7 +16,7 @@
             <p>Monitoring data mahasiswa</p>
           </div>
         </div>
-        <div class="live"><span class="dot"></span> DEMO UI</div>
+        <div class="live" id="liveBadge" data-state="loading" role="status"><span class="dot"></span> <span id="liveText">Memuat…</span></div>
       </header>
 
       <section class="hero">
@@ -28,30 +28,30 @@
         </p>
       </section>
 
-      <section class="stats" aria-label="Ringkasan progres">
+      <section class="stats" aria-label="Ringkasan progres" id="statsSection" aria-busy="true">
         <article class="stat primary">
           <div class="stat-label">Kelompok mengisi</div>
-          <div class="stat-value" id="statDone">18/31</div>
+          <div class="stat-value" id="statDone">—</div>
           <div class="stat-foot" id="statPercent">
-            58% dari seluruh kelompok
+            Memuat data…
           </div>
           <div class="progress-track">
-            <span id="mainProgress" style="width: 58%"></span>
+            <span id="mainProgress" style="width: 0%"></span>
           </div>
         </article>
         <article class="stat">
           <div class="stat-label">Belum mengisi</div>
-          <div class="stat-value" id="statPending">13</div>
+          <div class="stat-value" id="statPending">—</div>
           <div class="stat-foot">Perlu ditindaklanjuti</div>
         </article>
         <article class="stat">
           <div class="stat-label">Total submission</div>
-          <div class="stat-value" id="statSubmissions">24</div>
+          <div class="stat-value" id="statSubmissions">—</div>
           <div class="stat-foot">Termasuk pengiriman lama</div>
         </article>
         <article class="stat">
           <div class="stat-label">Anomali</div>
-          <div class="stat-value" id="statIssues">2</div>
+          <div class="stat-value" id="statIssues">—</div>
           <div class="stat-foot">Perlu dicek admin</div>
         </article>
       </section>
@@ -109,8 +109,8 @@
             <option value="oldest">Submission terlama</option>
             <option value="name">Nama kelompok A–Z</option>
           </select>
-          <button class="btn" id="resetBtn" type="button">Reset</button>
-          <button class="btn primary" id="refreshBtn" type="button">Refresh</button>
+          <button class="btn" id="resetBtn" type="button">Reset filter</button>
+          <button class="btn primary" id="refreshBtn" type="button">Refresh data</button>
         </div>
         <div class="result-bar">
           <strong id="resultCount">31 kelompok</strong

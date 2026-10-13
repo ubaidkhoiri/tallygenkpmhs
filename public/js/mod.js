@@ -15,32 +15,37 @@ export function initMod() {
   const anchor = document.getElementById("groupList");
   if (!anchor) return;
   const el = document.createElement("section");
+  el.className = "mod-panel";
   el.innerHTML = `
-    <div class="section-head"><h3>MOD</h3><span class="small-muted" id="modState">belum login</span></div>
-    <div class="controls">
-      <div class="control-row">
-        <input id="modPass" type="password" placeholder="Password MOD" autocomplete="off">
-        <button class="btn primary" id="modLogin" type="button">Masuk</button>
+    <details id="modDetails">
+      <summary>Panel MOD (khusus admin)</summary>
+      <div class="controls">
+        <div class="control-row">
+          <input id="modPass" type="password" placeholder="Password MOD" autocomplete="off" aria-label="Password MOD">
+          <button class="btn primary" id="modLogin" type="button">Masuk</button>
+        </div>
+        <fieldset id="modActions" disabled>
+          <div class="control-row">
+            <select id="modGroup" aria-label="Kelompok MOD"></select>
+            <select id="modSub" aria-label="Submission MOD"></select>
+          </div>
+          <div class="control-row">
+            <button class="btn" id="modPin" type="button">Pin utama</button>
+            <button class="btn" id="modUnpin" type="button">Lepas pin</button>
+          </div>
+          <div class="control-row">
+            <input id="modText" placeholder="Teks override tampil" aria-label="Teks override tampil">
+            <button class="btn" id="modOverride" type="button">Override</button>
+            <button class="btn" id="modClear" type="button">Hapus override</button>
+          </div>
+          <div class="control-row">
+            <button class="btn" id="modAudit" type="button">Lihat audit</button>
+          </div>
+        </fieldset>
+        <div class="small-muted" id="modMsg" role="status"></div>
+        <div id="modAuditList" aria-live="polite"></div>
       </div>
-      <div class="control-row">
-        <select id="modGroup" aria-label="Kelompok"></select>
-        <select id="modSub" aria-label="Submission"></select>
-      </div>
-      <div class="control-row">
-        <button class="btn" id="modPin" type="button">Pin utama</button>
-        <button class="btn" id="modUnpin" type="button">Lepas pin</button>
-      </div>
-      <div class="control-row">
-        <input id="modText" placeholder="Teks override tampil">
-        <button class="btn" id="modOverride" type="button">Override</button>
-        <button class="btn" id="modClear" type="button">Hapus override</button>
-      </div>
-      <div class="control-row">
-        <button class="btn" id="modAudit" type="button">Lihat audit</button>
-      </div>
-      <div class="small-muted" id="modMsg"></div>
-      <div id="modAuditList"></div>
-    </div>`;
+    </details>`;
   anchor.after(el);
   const $ = (id) => document.getElementById(id);
   const msg = (t) => { $("modMsg").textContent = t; };
@@ -66,8 +71,9 @@ export function initMod() {
   $("modLogin").addEventListener("click", async () => {
     const r = await post("/api/mod/login", { password: $("modPass").value });
     $("modPass").value = "";
-    $("modState").textContent = r.status === 200 ? "login ok" : "gagal";
-    msg(r.status === 200 ? "login MOD ok" : (r.data.message ?? "gagal"));
+    const ok = r.status === 200;
+    $("modActions").disabled = !ok;
+    msg(ok ? "login MOD ok" : (r.data.message ?? "gagal"));
   });
   $("modPin").addEventListener("click", async () => {
     const r = await post("/api/mod/pin", { groupId: $("modGroup").value, submissionId: $("modSub").value });

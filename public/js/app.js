@@ -363,7 +363,8 @@ function paint() {
       activeVillage = activeVillage === desa ? "" : desa;
       $("villageFilter").value = activeVillage;
       paint();
-      $("groupList").scrollIntoView({ behavior: "smooth", block: "start" });
+      const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      $("groupList").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
     },
   );
   renderGroups($("groupList"), $("resultCount"), allGroups, currentFilters(), (id) => {
@@ -416,6 +417,15 @@ function markRefresh(ok, fetchedAt) {
   $("refreshText").textContent = ok
     ? `Data terbaru · diperbarui ${when}`
     : `Gagal muat data terbaru ${when} · tampil ${usingRemote ? "data terakhir" : "data demo"}`;
+  const badge = $("liveBadge");
+  const label = $("liveText");
+  if (ok) {
+    badge.dataset.state = "live";
+    label.textContent = `Live · ${when}`;
+  } else {
+    badge.dataset.state = "demo";
+    label.textContent = "Demo · offline";
+  }
 }
 function applyRemote(remote) {
   if (!remote || remote.status !== "ok") return false;
@@ -430,10 +440,27 @@ function applyRemote(remote) {
   return true;
 }
 
+let firstLoad = true;
+
 async function refresh(manual) {
-  const remote = await fetchDashboard();
-  const ok = applyRemote(remote);
-  markRefresh(ok, ok ? remote.fetchedAt : undefined);
+  const btn = $("refreshBtn");
+  btn.disabled = true;
+  btn.textContent = "Memuat…";
+  $("statsSection").setAttribute("aria-busy", "true");
+  let ok = false;
+  try {
+    const remote = await fetchDashboard();
+    ok = applyRemote(remote);
+    if (!ok && firstLoad) paint();
+    markRefresh(ok, ok ? remote.fetchedAt : undefined);
+  } catch {
+    if (firstLoad) paint();
+    markRefresh(false);
+  }
+  firstLoad = false;
+  $("statsSection").setAttribute("aria-busy", "false");
+  btn.disabled = false;
+  btn.textContent = "Refresh data";
   if (!ok) showToast("Gagal muat data terbaru. Coba lagi.");
   else if (manual) showToast("Data diperbarui.");
   return ok;
@@ -445,7 +472,6 @@ function init() {
     MASTER_DATA.map(
       (v) => `<option value="${esc(v.desa)}">${esc(v.desa)}</option>`,
     ).join("");
-  paint();
   ["searchInput", "villageFilter", "statusFilter", "sortSelect"].forEach((id) =>
     $(id).addEventListener(id === "searchInput" ? "input" : "change", () => {
       if (id === "villageFilter") activeVillage = $("villageFilter").value;
@@ -464,7 +490,9 @@ function init() {
     if (e.target === $("detailOverlay")) closeDetail($("detailOverlay"));
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeDetail($("detailOverlay"));
+    if (e.key === "Escape" && $("detailOverlay").classList.contains("open")) {
+      closeDetail($("detailOverlay"));
+    }
   });
   refresh(false);
   if (!pollTimer) pollTimer = setInterval(() => refresh(false), 30000);

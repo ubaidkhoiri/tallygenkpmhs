@@ -151,10 +151,13 @@ export function openDetail(els, g) {
     ${g.status === "issue" ? '<div class="footer-note"><strong>Anomali data:</strong> periksa kecocokan nama desa/kelompok dan validitas submission pada sumber Tally.</div>' : ""}`;
   els.overlay.classList.add("open");
   document.body.style.overflow = "hidden";
+  els.overlay._opener = document.activeElement;
   els.closeBtn.focus();
 }
 
 export function closeDetail(overlay) {
   overlay.classList.remove("open");
   document.body.style.overflow = "";
+  if (overlay._opener && overlay._opener.focus) overlay._opener.focus();
+  overlay._opener = null;
 }
