@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/normalize.test.mjs tests/sync.test.mjs tests/tally.test.mjs",
+    "test": "node --test tests/normalize.test.mjs tests/sync.test.mjs tests/tally.test.mjs tests/delete.test.mjs",
     "migrate": "node scripts/migrate.mjs",
     "inspect": "node scripts/inspect.mjs"
   },

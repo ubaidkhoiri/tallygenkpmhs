@@ -606,6 +606,39 @@
         display: grid;
         gap: 9px;
       }
+      .mod-groups {
+        display: grid;
+        gap: 8px;
+      }
+      .mod-group-btn {
+        text-align: left;
+      }
+      .mod-sub {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        margin: 8px 0;
+        display: grid;
+        gap: 8px;
+        background: white;
+      }
+      .mod-sub strong {
+        font-size: 12px;
+        display: block;
+      }
+      .mod-sub span {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .btn.danger {
+        color: var(--red);
+        border-color: #f3c2bd;
+      }
+      .btn.danger[data-armed] {
+        background: var(--red);
+        border-color: var(--red);
+        color: white;
+      }
       @media (min-width: 620px) {
         .shell {
           padding-top: 28px;

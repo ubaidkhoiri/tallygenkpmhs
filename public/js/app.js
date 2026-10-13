@@ -7,7 +7,7 @@ import {
   openDetail,
   closeDetail,
 } from "./render.js";
-import { initMod } from "./mod.js";
+import { initMod, mountModOverride } from "./mod.js";
 
 ("use strict");
 
@@ -380,6 +380,7 @@ function paint() {
       },
       g,
     );
+    mountModOverride($("detailContent"), g, () => refresh(false));
   });
 }
 
@@ -496,7 +497,7 @@ function init() {
   });
   refresh(false);
   if (!pollTimer) pollTimer = setInterval(() => refresh(false), 30000);
-  initMod();
+  initMod(() => refresh(false));
 }
 
 init();
