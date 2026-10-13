@@ -1,0 +1,1297 @@
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f8fa" />
+    <title>Monitoring Mahasiswa — Generus Kulon Progo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f9;
+        --surface: #fff;
+        --ink: #182230;
+        --muted: #667085;
+        --line: #e6e9ee;
+        --brand: #216e55;
+        --brand-2: #e8f4ee;
+        --amber: #946200;
+        --amber-bg: #fff4d6;
+        --red: #b42318;
+        --red-bg: #fef0ef;
+        --blue: #2859a5;
+        --blue-bg: #edf4ff;
+        --radius: 16px;
+        --shadow: 0 8px 24px rgba(16, 24, 40, 0.045);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          15px/1.45 Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #a8d5c2;
+        outline-offset: 2px;
+      }
+      .shell {
+        width: min(100%, 760px);
+        margin: 0 auto;
+        padding: 20px 16px 96px;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 0;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        background: var(--brand);
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        flex-shrink: 0;
+      }
+      .brand h1 {
+        font-size: 15px;
+        line-height: 1.25;
+        margin: 0;
+        font-weight: 760;
+        letter-spacing: -0.2px;
+      }
+      .brand p {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 4px 0 0;
+      }
+      .live {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 10px;
+        color: #344054;
+        background: white;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #16a36a;
+      }
+      .hero {
+        margin-bottom: 20px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+        color: var(--brand);
+        font-weight: 800;
+        margin: 0 0 8px;
+      }
+      h2 {
+        font-size: 27px;
+        line-height: 1.13;
+        letter-spacing: -1px;
+        margin: 0 0 8px;
+      }
+      .intro {
+        color: var(--muted);
+        margin: 0;
+        max-width: 560px;
+        font-size: 13px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin: 20px 0;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 15px;
+        min-width: 0;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .stat-value {
+        font-size: 27px;
+        font-weight: 780;
+        letter-spacing: -1px;
+        margin: 7px 0 3px;
+        line-height: 1;
+      }
+      .stat-foot {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .stat.primary {
+        background: var(--brand);
+        border-color: var(--brand);
+        color: white;
+      }
+      .stat.primary .stat-label,
+      .stat.primary .stat-foot {
+        color: #d5eee2;
+      }
+      .progress-track {
+        height: 6px;
+        background: #e9edf0;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 12px;
+      }
+      .progress-track span {
+        display: block;
+        height: 100%;
+        background: var(--brand);
+        border-radius: 999px;
+        transition: width 0.25s;
+      }
+      .stat.primary .progress-track {
+        background: #ffffff35;
+      }
+      .stat.primary .progress-track span {
+        background: #fff;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 26px 0 12px;
+      }
+      .section-head h3 {
+        font-size: 16px;
+        margin: 0;
+        letter-spacing: -0.3px;
+      }
+      .small-muted {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .village-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .village-card {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        border-radius: 14px;
+        padding: 13px;
+        text-align: left;
+        color: inherit;
+        min-width: 0;
+        transition:
+          border-color 0.15s,
+          transform 0.15s;
+      }
+      .village-card:hover {
+        border-color: #a5cbbb;
+      }
+      .village-card.active {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 1px var(--brand) inset;
+      }
+      .village-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .village-name {
+        font-weight: 750;
+        font-size: 13px;
+      }
+      .village-count {
+        font-size: 11px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .village-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 13px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .village-meta strong {
+        color: var(--ink);
+      }
+      .controls {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px;
+        display: grid;
+        gap: 9px;
+      }
+      .search-wrap {
+        position: relative;
+      }
+      .search-wrap svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #98a2b3;
+        pointer-events: none;
+      }
+      input,
+      select {
+        width: 100%;
+        border: 1px solid #d9dee6;
+        background: white;
+        border-radius: 10px;
+        min-height: 42px;
+        padding: 9px 11px;
+        color: var(--ink);
+      }
+      .search-wrap input {
+        padding-left: 37px;
+      }
+      .control-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+      .btn {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: white;
+        color: var(--ink);
+        padding: 9px 12px;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .btn.primary {
+        background: var(--brand);
+        color: white;
+        border-color: var(--brand);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .result-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin: 14px 2px 9px;
+      }
+      .result-bar strong {
+        font-size: 12px;
+      }
+      .result-bar span {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .group-list {
+        display: grid;
+        gap: 8px;
+      }
+      .group-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        padding: 12px;
+        color: inherit;
+        min-width: 0;
+      }
+      .group-row:hover {
+        border-color: #b6c9c1;
+      }
+      .group-icon {
+        width: 37px;
+        height: 37px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        background: #f0f3f5;
+        color: #667085;
+        font-weight: 800;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+      .group-icon.done {
+        background: var(--brand-2);
+        color: var(--brand);
+      }
+      .group-main {
+        min-width: 0;
+        flex: 1;
+      }
+      .group-name {
+        font-weight: 750;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .group-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .status {
+        font-size: 10px;
+        line-height: 1.2;
+        font-weight: 750;
+        border-radius: 999px;
+        padding: 6px 8px;
+        white-space: nowrap;
+      }
+      .status.done {
+        color: var(--brand);
+        background: var(--brand-2);
+      }
+      .status.pending {
+        color: var(--amber);
+        background: var(--amber-bg);
+      }
+      .status.issue {
+        color: var(--red);
+        background: var(--red-bg);
+      }
+      .empty {
+        padding: 30px 18px;
+        text-align: center;
+        background: white;
+        border: 1px dashed #cdd3dc;
+        border-radius: 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .footer-note {
+        margin-top: 22px;
+        padding: 13px 14px;
+        border-radius: 12px;
+        background: #eef1f4;
+        color: #667085;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      .footer-note strong {
+        color: #344054;
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: #10182870;
+        z-index: 10;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0;
+      }
+      .overlay.open {
+        display: flex;
+      }
+      .sheet {
+        width: min(100%, 600px);
+        max-height: 88dvh;
+        overflow: auto;
+        background: #fff;
+        border-radius: 22px 22px 0 0;
+        padding: 20px 18px calc(24px + env(safe-area-inset-bottom));
+        box-shadow: 0 -12px 40px #10182820;
+        animation: rise 0.18s ease-out;
+      }
+      @keyframes rise {
+        from {
+          transform: translateY(18px);
+          opacity: 0.5;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .sheet-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .sheet h3 {
+        margin: 0;
+        font-size: 20px;
+        letter-spacing: -0.5px;
+      }
+      .sheet .subtitle {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .close {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 11px;
+        font-size: 20px;
+        line-height: 1;
+        color: #475467;
+        flex-shrink: 0;
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 20px 0;
+      }
+      .detail-cell {
+        padding: 12px;
+        background: #f7f8fa;
+        border-radius: 12px;
+        min-width: 0;
+      }
+      .detail-cell label {
+        display: block;
+        font-size: 10px;
+        color: var(--muted);
+        margin-bottom: 5px;
+      }
+      .detail-cell div {
+        font-size: 13px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+      .detail-block {
+        border-top: 1px solid var(--line);
+        padding-top: 15px;
+        margin-top: 15px;
+      }
+      .detail-block h4 {
+        font-size: 12px;
+        margin: 0 0 9px;
+      }
+      .student-data {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: #f7f8fa;
+        border-radius: 12px;
+        padding: 13px;
+        font-size: 12px;
+        line-height: 1.65;
+      }
+      .history-item {
+        display: flex;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .history-item:last-child {
+        border-bottom: 0;
+      }
+      .history-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--brand);
+        border-radius: 50%;
+        margin-top: 5px;
+        flex-shrink: 0;
+      }
+      .history-item strong {
+        font-size: 12px;
+        display: block;
+      }
+      .history-item span {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translateX(-50%);
+        background: #182230;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        box-shadow: var(--shadow);
+        display: none;
+        z-index: 20;
+        max-width: calc(100% - 30px);
+      }
+      .toast.show {
+        display: block;
+      }
+      @media (min-width: 620px) {
+        .shell {
+          padding-top: 28px;
+        }
+        .stats {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .stat {
+          padding: 16px;
+        }
+        .stat-value {
+          font-size: 29px;
+        }
+        .village-grid {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+        .controls {
+          grid-template-columns: 1.5fr 1fr 1fr auto;
+          align-items: center;
+        }
+        .control-row {
+          display: contents;
+        }
+        .btn {
+          height: 42px;
+        }
+        .overlay {
+          align-items: center;
+          padding: 20px;
+        }
+        .sheet {
+          border-radius: 22px;
+          max-height: 82dvh;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">GK</div>
+          <div>
+            <h1>Generus Kulon Progo</h1>
+            <p>Monitoring data mahasiswa</p>
+          </div>
+        </div>
+        <div class="live"><span class="dot"></span> DEMO UI</div>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow">Dashboard monitoring</p>
+        <h2>Data mahasiswa,<br />terpantau dalam satu tempat.</h2>
+        <p class="intro">
+          Pantau progres pendataan per desa dan kelompok. Pilih kelompok untuk
+          melihat detail pengiriman data dan riwayat submission.
+        </p>
+      </section>
+
+      <section class="stats" aria-label="Ringkasan progres">
+        <article class="stat primary">
+          <div class="stat-label">Kelompok mengisi</div>
+          <div class="stat-value" id="statDone">18/31</div>
+          <div class="stat-foot" id="statPercent">
+            58% dari seluruh kelompok
+          </div>
+          <div class="progress-track">
+            <span id="mainProgress" style="width: 58%"></span>
+          </div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Belum mengisi</div>
+          <div class="stat-value" id="statPending">13</div>
+          <div class="stat-foot">Perlu ditindaklanjuti</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Total submission</div>
+          <div class="stat-value" id="statSubmissions">24</div>
+          <div class="stat-foot">Termasuk pengiriman lama</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Anomali</div>
+          <div class="stat-value" id="statIssues">2</div>
+          <div class="stat-foot">Perlu dicek admin</div>
+        </article>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h3>Progres per desa</h3>
+          <span class="small-muted">5 desa · 31 kelompok</span>
+        </div>
+        <div class="village-grid" id="villageGrid"></div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h3>Daftar kelompok</h3>
+          <span class="small-muted" id="refreshText"
+            >Demo data · belum tersambung</span
+          >
+        </div>
+        <div class="controls">
+          <div class="search-wrap">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4"></path>
+            </svg>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Cari nama, desa, kelompok…"
+              aria-label="Cari nama, desa, atau kelompok"
+            />
+          </div>
+          <div class="control-row">
+            <select id="villageFilter" aria-label="Filter desa">
+              <option value="">Semua desa</option>
+            </select>
+            <select id="statusFilter" aria-label="Filter status">
+              <option value="">Semua status</option>
+              <option value="done">Sudah mengisi</option>
+              <option value="pending">Belum mengisi</option>
+              <option value="issue">Anomali</option>
+            </select>
+          </div>
+          <select id="sortSelect" aria-label="Urutkan">
+            <option value="village">Urutkan: Desa</option>
+            <option value="newest">Submission terbaru</option>
+            <option value="oldest">Submission terlama</option>
+            <option value="name">Nama kelompok A–Z</option>
+          </select>
+          <button class="btn" id="resetBtn" type="button">Reset</button>
+        </div>
+        <div class="result-bar">
+          <strong id="resultCount">31 kelompok</strong
+          ><span>Ketuk baris untuk detail</span>
+        </div>
+        <div class="group-list" id="groupList" aria-live="polite"></div>
+      </section>
+
+      <div class="footer-note">
+        <strong>Catatan prototipe:</strong> seluruh status, nama pengirim, dan
+        isi data di halaman ini adalah data mock untuk referensi UI. Integrasi
+        produksi harus mengambil submission dari Tally melalui Cloudflare
+        Worker; API key tidak boleh berada di frontend.
+      </div>
+    </main>
+
+    <div
+      class="overlay"
+      id="detailOverlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="detailTitle"
+    >
+      <section class="sheet">
+        <div class="sheet-head">
+          <div>
+            <h3 id="detailTitle">Detail kelompok</h3>
+            <p class="subtitle" id="detailSubtitle"></p>
+          </div>
+          <button
+            class="close"
+            id="closeDetail"
+            type="button"
+            aria-label="Tutup detail"
+          >
+            ×
+          </button>
+        </div>
+        <div id="detailContent"></div>
+        <button
+          class="btn"
+          id="closeDetailBottom"
+          type="button"
+          style="width: 100%; margin-top: 16px"
+        >
+          Tutup detail
+        </button>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      "use strict";
+
+      /* Master data desa dan kelompok yang diberikan pengguna. */
+      const MASTER_DATA = [
+        {
+          desa: "Samigaluh",
+          kelompok: [
+            "Pengos",
+            "Suren",
+            "Kalirejo",
+            "Pagerharjo",
+            "Separang",
+            "Kebonharjo",
+          ],
+        },
+        {
+          desa: "Pengasih",
+          kelompok: [
+            "Margosari",
+            "Sendangsari",
+            "Banjarharjo",
+            "Nanggulan",
+            "Girinyono",
+            "Jatimulyo",
+            "Serut",
+          ],
+        },
+        {
+          desa: "Wates",
+          kelompok: [
+            "Krembangan",
+            "Bojong",
+            "Giripeni 1",
+            "Giripeni 2",
+            "Hargowilis",
+            "Triharjo",
+          ],
+        },
+        {
+          desa: "Lendah",
+          kelompok: [
+            "Bonosoro",
+            "Bumirejo",
+            "Carikan",
+            "Ngentakrejo",
+            "Tuksono",
+            "Srikayangan",
+          ],
+        },
+        {
+          desa: "Temon",
+          kelompok: [
+            "Tawangsari",
+            "Hargorejo",
+            "Sidatan 1",
+            "Sidatan 2",
+            "Jogoboyo",
+            "Jogoresan",
+          ],
+        },
+      ];
+
+      /* DATA MOCK: ganti dengan respons API Worker ketika integrasi dilakukan. */
+      const mockSubmissions = [
+        {
+          id: "sub-024",
+          desa: "Samigaluh",
+          kelompok: "Pengos",
+          nama: "Ahmad Fikri",
+          submittedAt: "2026-10-13T08:42:00+07:00",
+          data: "Ahmad Fikri — Universitas Negeri Yogyakarta — 2023\nNadia Putri — UIN Sunan Kalijaga — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-023",
+          desa: "Pengasih",
+          kelompok: "Margosari",
+          nama: "Siti Rahma",
+          submittedAt: "2026-10-13T08:15:00+07:00",
+          data: "Siti Rahma — Universitas Gadjah Mada — 2022\nFajar Nugroho — Universitas Negeri Yogyakarta — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-022",
+          desa: "Wates",
+          kelompok: "Giripeni 1",
+          nama: "Dimas Pratama",
+          submittedAt: "2026-10-12T21:10:00+07:00",
+          data: "Dimas Pratama — Universitas Teknologi Yogyakarta — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-021",
+          desa: "Lendah",
+          kelompok: "Bonosoro",
+          nama: "Rizki Amelia",
+          submittedAt: "2026-10-12T18:05:00+07:00",
+          data: "Kosong",
+          confirmed: true,
+        },
+        {
+          id: "sub-020",
+          desa: "Temon",
+          kelompok: "Tawangsari",
+          nama: "Dewi Lestari",
+          submittedAt: "2026-10-12T17:22:00+07:00",
+          data: "Dewi Lestari — Universitas Ahmad Dahlan — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-019",
+          desa: "Samigaluh",
+          kelompok: "Suren",
+          nama: "Ilham Maulana",
+          submittedAt: "2026-10-12T15:20:00+07:00",
+          data: "Ilham Maulana — Universitas Islam Indonesia — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-018",
+          desa: "Pengasih",
+          kelompok: "Sendangsari",
+          nama: "Nur Aini",
+          submittedAt: "2026-10-12T14:05:00+07:00",
+          data: "Nur Aini — Universitas Negeri Yogyakarta — 2022",
+          confirmed: true,
+        },
+        {
+          id: "sub-017",
+          desa: "Wates",
+          kelompok: "Krembangan",
+          nama: "Bagas Aditya",
+          submittedAt: "2026-10-11T19:40:00+07:00",
+          data: "Bagas Aditya — Universitas Amikom Yogyakarta — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-016",
+          desa: "Lendah",
+          kelompok: "Bumirejo",
+          nama: "Maya Safitri",
+          submittedAt: "2026-10-11T16:25:00+07:00",
+          data: "Maya Safitri — UIN Sunan Kalijaga — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-015",
+          desa: "Temon",
+          kelompok: "Hargorejo",
+          nama: "Rian Setiawan",
+          submittedAt: "2026-10-11T11:05:00+07:00",
+          data: "Rian Setiawan — Universitas Gadjah Mada — 2021",
+          confirmed: true,
+        },
+        {
+          id: "sub-014",
+          desa: "Pengasih",
+          kelompok: "Banjarharjo",
+          nama: "Nabila Putri",
+          submittedAt: "2026-10-10T13:15:00+07:00",
+          data: "Nabila Putri — Universitas Negeri Yogyakarta — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-013",
+          desa: "Wates",
+          kelompok: "Bojong",
+          nama: "Arif Hidayat",
+          submittedAt: "2026-10-10T09:15:00+07:00",
+          data: "Arif Hidayat — Universitas Teknologi Yogyakarta — 2022",
+          confirmed: true,
+        },
+        {
+          id: "sub-012",
+          desa: "Lendah",
+          kelompok: "Carikan",
+          nama: "Laila Khairunnisa",
+          submittedAt: "2026-10-09T19:30:00+07:00",
+          data: "Laila Khairunnisa — Universitas Ahmad Dahlan — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-011",
+          desa: "Temon",
+          kelompok: "Sidatan 1",
+          nama: "Fauzan Hakim",
+          submittedAt: "2026-10-09T14:50:00+07:00",
+          data: "Fauzan Hakim — Universitas Negeri Yogyakarta — 2022",
+          confirmed: true,
+        },
+        {
+          id: "sub-010",
+          desa: "Samigaluh",
+          kelompok: "Kalirejo",
+          nama: "Alya Zahra",
+          submittedAt: "2026-10-08T15:00:00+07:00",
+          data: "Alya Zahra — UIN Sunan Kalijaga — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-009",
+          desa: "Pengasih",
+          kelompok: "Nanggulan",
+          nama: "Fikri Ramadhan",
+          submittedAt: "2026-10-08T11:35:00+07:00",
+          data: "Fikri Ramadhan — Universitas Gadjah Mada — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-008",
+          desa: "Wates",
+          kelompok: "Giripeni 2",
+          nama: "Tania Wulandari",
+          submittedAt: "2026-10-07T16:20:00+07:00",
+          data: "Tania Wulandari — Universitas Amikom Yogyakarta — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-007",
+          desa: "Lendah",
+          kelompok: "Ngentakrejo",
+          nama: "Rafi Akbar",
+          submittedAt: "2026-10-07T10:45:00+07:00",
+          data: "Rafi Akbar — Universitas Islam Indonesia — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-006",
+          desa: "Temon",
+          kelompok: "Jogoboyo",
+          nama: "Putri Ananda",
+          submittedAt: "2026-10-06T18:15:00+07:00",
+          data: "Putri Ananda — Universitas Negeri Yogyakarta — 2022",
+          confirmed: true,
+        },
+        {
+          id: "sub-005",
+          desa: "Samigaluh",
+          kelompok: "Pagerharjo",
+          nama: "Rizal Firmansyah",
+          submittedAt: "2026-10-06T13:00:00+07:00",
+          data: "Rizal Firmansyah — Universitas Gadjah Mada — 2024",
+          confirmed: true,
+        },
+        {
+          id: "sub-004",
+          desa: "Pengasih",
+          kelompok: "Giri Nonyo",
+          nama: "Hanif",
+          submittedAt: "2026-10-05T10:10:00+07:00",
+          data: "Data belum diverifikasi",
+          confirmed: false,
+          issue: true,
+        },
+        {
+          id: "sub-003",
+          desa: "Wates",
+          kelompok: "Hargowilis",
+          nama: "Rina",
+          submittedAt: "2026-10-04T12:00:00+07:00",
+          data: "Rina — Universitas Ahmad Dahlan — 2023",
+          confirmed: true,
+        },
+        {
+          id: "sub-002",
+          desa: "Lendah",
+          kelompok: "Tuksono",
+          nama: "Andi Saputra",
+          submittedAt: "2026-10-03T14:00:00+07:00",
+          data: "Andi Saputra — Universitas Negeri Yogyakarta — 2022",
+          confirmed: true,
+        },
+        {
+          id: "sub-001",
+          desa: "Temon",
+          kelompok: "SIDATAN 2",
+          nama: "Pengirim tidak cocok",
+          submittedAt: "2026-10-02T09:00:00+07:00",
+          data: "Submission perlu pemetaan ulang nama kelompok",
+          confirmed: true,
+          issue: true,
+        },
+      ];
+
+      /* Normalize mock data ke struktur status per kelompok. */
+      const submissions = mockSubmissions.map((s) => ({
+        ...s,
+        kelompok:
+          s.kelompok === "Giri Nonyo"
+            ? "Girinyono"
+            : s.kelompok === "SIDATAN 2"
+              ? "Sidatan 2"
+              : s.kelompok,
+      }));
+      const dateFmt = new Intl.DateTimeFormat("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      const allGroups = MASTER_DATA.flatMap((v) =>
+        v.kelompok.map((k) => {
+          const history = submissions
+            .filter(
+              (s) =>
+                s.desa === v.desa &&
+                s.kelompok.toLowerCase() === k.toLowerCase(),
+            )
+            .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+          const latest = history[0] || null;
+          return {
+            id: v.desa + "::" + k,
+            desa: v.desa,
+            kelompok: k,
+            history,
+            latest,
+            status: latest ? (latest.issue ? "issue" : "done") : "pending",
+          };
+        }),
+      );
+      let activeVillage = "";
+      const $ = (id) => document.getElementById(id);
+      const esc = (value) =>
+        String(value ?? "").replace(
+          /[&<>"']/g,
+          (ch) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[ch],
+        );
+      const dateText = (value) =>
+        value ? dateFmt.format(new Date(value)) : "—";
+      const pct = (n, total) => (total ? Math.round((n / total) * 100) : 0);
+      const statusLabel = (status) =>
+        status === "done"
+          ? "Sudah mengisi"
+          : status === "issue"
+            ? "Perlu dicek"
+            : "Belum mengisi";
+
+      function renderStats() {
+        const done = allGroups.filter((g) => g.status === "done").length;
+        const pending = allGroups.filter((g) => g.status === "pending").length;
+        const issues = allGroups.filter((g) => g.status === "issue").length;
+        $("statDone").textContent = `${done}/${allGroups.length}`;
+        $("statPending").textContent = pending;
+        $("statIssues").textContent = issues;
+        $("statSubmissions").textContent = submissions.length;
+        $("statPercent").textContent =
+          `${pct(done, allGroups.length)}% sudah mengisi`;
+        $("mainProgress").style.width = `${pct(done, allGroups.length)}%`;
+      }
+      function renderVillageCards() {
+        $("villageGrid").innerHTML = MASTER_DATA.map((v) => {
+          const groups = allGroups.filter((g) => g.desa === v.desa);
+          const done = groups.filter((g) => g.status === "done").length;
+          const issues = groups.filter((g) => g.status === "issue").length;
+          const selected = activeVillage === v.desa;
+          return `<button class="village-card ${selected ? "active" : ""}" data-village="${esc(v.desa)}" aria-pressed="${selected}">
+      <div class="village-top"><span class="village-name">${esc(v.desa)}</span><span class="village-count">${done}/${groups.length}</span></div>
+      <div class="progress-track"><span style="width:${pct(done, groups.length)}%"></span></div>
+      <div class="village-meta"><span><strong>${groups.filter((g) => g.status === "pending").length}</strong> belum</span><span>${issues ? `<strong>${issues}</strong> anomali` : `${pct(done, groups.length)}%`}</span></div>
+    </button>`;
+        }).join("");
+        $("villageGrid")
+          .querySelectorAll("[data-village]")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => {
+              activeVillage =
+                activeVillage === btn.dataset.village
+                  ? ""
+                  : btn.dataset.village;
+              $("villageFilter").value = activeVillage;
+              renderVillageCards();
+              renderGroups();
+              $("groupList").scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }),
+          );
+      }
+      function filteredGroups() {
+        const q = $("searchInput").value.trim().toLocaleLowerCase("id-ID");
+        const village = $("villageFilter").value;
+        const status = $("statusFilter").value;
+        const sort = $("sortSelect").value;
+        let items = allGroups.filter((g) => {
+          const hay = [g.desa, g.kelompok, g.latest?.nama, g.latest?.data]
+            .join(" ")
+            .toLocaleLowerCase("id-ID");
+          return (
+            (!q || hay.includes(q)) &&
+            (!village || g.desa === village) &&
+            (!status || g.status === status)
+          );
+        });
+        items.sort((a, b) => {
+          if (sort === "name")
+            return a.kelompok.localeCompare(b.kelompok, "id");
+          if (sort === "newest")
+            return (
+              new Date(b.latest?.submittedAt || 0) -
+              new Date(a.latest?.submittedAt || 0)
+            );
+          if (sort === "oldest")
+            return (
+              new Date(a.latest?.submittedAt || "9999-12-31") -
+              new Date(b.latest?.submittedAt || "9999-12-31")
+            );
+          return (
+            a.desa.localeCompare(b.desa, "id") ||
+            a.kelompok.localeCompare(b.kelompok, "id")
+          );
+        });
+        return items;
+      }
+      function renderGroups() {
+        const items = filteredGroups();
+        $("resultCount").textContent =
+          `${items.length} dari ${allGroups.length} kelompok`;
+        if (!items.length) {
+          $("groupList").innerHTML =
+            '<div class="empty">Tidak ada kelompok yang cocok.<br>Coba ubah kata kunci atau filter.</div>';
+          return;
+        }
+        $("groupList").innerHTML = items
+          .map((g) => {
+            const latest = g.latest;
+            const initials = g.kelompok
+              .split(/\s+/)
+              .map((w) => w[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase();
+            return `<button class="group-row" data-group="${esc(g.id)}">
+      <span class="group-icon ${g.status === "done" ? "done" : ""}">${esc(initials)}</span>
+      <span class="group-main"><span class="group-name">${esc(g.kelompok)}</span><span class="group-sub">${esc(g.desa)} · ${latest ? `Terakhir: ${esc(dateText(latest.submittedAt))}` : "Belum ada submission"}</span></span>
+      <span class="status ${g.status}">${statusLabel(g.status)}</span>
+    </button>`;
+          })
+          .join("");
+        $("groupList")
+          .querySelectorAll("[data-group]")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => openDetail(btn.dataset.group)),
+          );
+      }
+      function openDetail(id) {
+        const g = allGroups.find((x) => x.id === id);
+        if (!g) return;
+        $("detailTitle").textContent = g.kelompok;
+        $("detailSubtitle").textContent =
+          `${g.desa} · ${g.history.length} submission tercatat`;
+        const latest = g.latest;
+        $("detailContent").innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-cell"><label>STATUS KELOMPOK</label><div><span class="status ${g.status}">${statusLabel(g.status)}</span></div></div>
+      <div class="detail-cell"><label>JUMLAH SUBMISSION</label><div>${g.history.length} pengiriman</div></div>
+      <div class="detail-cell"><label>NAMA PENGIRIM TERAKHIR</label><div>${esc(latest?.nama || "—")}</div></div>
+      <div class="detail-cell"><label>WAKTU PENGIRIMAN</label><div>${esc(dateText(latest?.submittedAt))}</div></div>
+    </div>
+    <div class="detail-block"><h4>Data mahasiswa (submission terbaru)</h4><div class="student-data">${esc(latest?.data || "Belum ada data yang dikirim.")}</div></div>
+    <div class="detail-block"><h4>Riwayat submission</h4>
+      ${g.history.length ? g.history.map((s) => `<div class="history-item"><span class="history-dot"></span><div><strong>${esc(s.nama)} ${s.issue ? '<span class="status issue">Perlu dicek</span>' : ""}</strong><span>${esc(dateText(s.submittedAt))} · ${s.confirmed ? "Konfirmasi dicentang" : "Konfirmasi belum dicentang"}</span></div></div>`).join("") : '<div class="empty">Belum ada riwayat submission untuk kelompok ini.</div>'}
+    </div>
+    ${g.status === "issue" ? '<div class="footer-note"><strong>Anomali data:</strong> periksa kecocokan nama desa/kelompok dan validitas submission pada sumber Tally.</div>' : ""}`;
+        $("detailOverlay").classList.add("open");
+        document.body.style.overflow = "hidden";
+        $("closeDetail").focus();
+      }
+      function closeDetail() {
+        $("detailOverlay").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+      function resetFilters() {
+        activeVillage = "";
+        $("searchInput").value = "";
+        $("villageFilter").value = "";
+        $("statusFilter").value = "";
+        $("sortSelect").value = "village";
+        renderVillageCards();
+        renderGroups();
+      }
+      function init() {
+        $("villageFilter").innerHTML =
+          '<option value="">Semua desa</option>' +
+          MASTER_DATA.map(
+            (v) => `<option value="${esc(v.desa)}">${esc(v.desa)}</option>`,
+          ).join("");
+        renderStats();
+        renderVillageCards();
+        renderGroups();
+        ["searchInput", "villageFilter", "statusFilter", "sortSelect"].forEach(
+          (id) =>
+            $(id).addEventListener(
+              id === "searchInput" ? "input" : "change",
+              () => {
+                if (id === "villageFilter")
+                  activeVillage = $("villageFilter").value;
+                renderVillageCards();
+                renderGroups();
+              },
+            ),
+        );
+        $("resetBtn").addEventListener("click", resetFilters);
+        $("closeDetail").addEventListener("click", closeDetail);
+        $("closeDetailBottom").addEventListener("click", closeDetail);
+        $("detailOverlay").addEventListener("click", (e) => {
+          if (e.target === $("detailOverlay")) closeDetail();
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeDetail();
+        });
+      }
+      init();
+    </script>
+  </body>
+</html>
