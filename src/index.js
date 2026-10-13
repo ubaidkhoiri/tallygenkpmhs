@@ -1,5 +1,5 @@
-import { VILLAGES, GROUPS_FLAT } from "./master-data.js";
 import { db } from "./db.js";
+import { buildDashboard } from "./dashboard.js";
 import { upsertSubmission, reconcileAll } from "./sync.js";
 
 const json = (data, status = 200) =>
@@ -7,32 +7,6 @@ const json = (data, status = 200) =>
     status,
     headers: { "content-type": "application/json; charset=utf-8" },
   });
-
-// Mode scaffold: kontrak respons sudah final, isi masih mock dari master
-// data. Integrasi Neon masuk pada Task 5.
-function scaffoldDashboard() {
-  return {
-    status: "ok",
-    fetchedAt: new Date().toISOString(),
-    totals: {
-      villages: VILLAGES.length,
-      groups: GROUPS_FLAT.length,
-      submittedGroups: 0,
-      pendingGroups: GROUPS_FLAT.length,
-      submissions: 0,
-    },
-    groups: GROUPS_FLAT.map((g) => ({
-      id: g.id,
-      desa: g.desa,
-      kelompok: g.kelompok,
-      status: "pending",
-      latest: null,
-      history: [],
-    })),
-    submissions: [],
-    warnings: ["Mode scaffold: integrasi Tally dan Neon belum aktif."],
-  };
-}
 
 function timingSafeEqual(a, b) {
   if (a.length !== b.length) return false;
@@ -82,7 +56,14 @@ export default {
       if (request.method !== "GET") {
         return json({ status: "error", message: "method not allowed" }, 405);
       }
-      return json(scaffoldDashboard());
+      try {
+        const data = await buildDashboard(db(env));
+        const keys = ["status", "fetchedAt", "totals", "groups", "submissions", "warnings"];
+        if (!keys.every((k) => k in data)) throw new Error("kontrak rusak");
+        return json(data);
+      } catch (e) {
+        return json({ status: "error", message: "gagal baca database" }, 500);
+      }
     }
     if (url.pathname === "/api/webhooks/tally") {
       if (request.method !== "POST") {
