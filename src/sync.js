@@ -20,12 +20,22 @@ export async function upsertSubmission(sql, raw) {
   return mode;
 }
 
+export async function isDeleted(sql, id) {
+  const rows = await sql`SELECT 1 FROM deleted_submissions WHERE submission_id = ${id} LIMIT 1`;
+  return rows.length > 0;
+}
+
 // Reconcile penuh dari Tally. Pin MOD tak tersentuh karena pin hanya dibaca di layer dashboard.
+// Id di deleted_submissions dilewati agar hapus MOD permanen.
 export async function reconcileAll(sql, { formId, apiKey }) {
   const subs = await listSubmissions({ formId, apiKey });
   const counts = { inserted: 0, updated: 0, skipped: 0 };
   for (const s of subs) {
     if (!s.isCompleted) continue;
+    if (await isDeleted(sql, s.id)) {
+      counts.skipped += 1;
+      continue;
+    }
     counts[await upsertSubmission(sql, s)] += 1;
   }
   await sql`INSERT INTO sync_state (id, value) VALUES ('last_reconcile', ${new Date().toISOString()})
