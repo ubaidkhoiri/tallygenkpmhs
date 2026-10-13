@@ -1,6 +1,6 @@
 import { db } from "./db.js";
 import { buildDashboard } from "./dashboard.js";
-import { isMod, modLogin, modPin, modUnpin, modOverride, modClearOverride } from "./mod.js";
+import { isMod, modLogin, modPin, modUnpin, modOverride, modClearOverride, modDeleteSubmission } from "./mod.js";
 import { upsertSubmission, reconcileAll } from "./sync.js";
 
 const json = (data, status = 200) =>
@@ -115,6 +115,11 @@ export default {
         const limit = Math.min(Number(url.searchParams.get("limit") ?? 50) || 50, 200);
         const rows = await sql`SELECT id, action, group_id, detail, created_at FROM mod_audit ORDER BY id DESC LIMIT ${limit}`;
         return json({ status: "ok", audit: rows });
+      }
+      if (url.pathname === "/api/mod/delete" && request.method === "DELETE") {
+        const { submissionId } = await request.json().catch(() => ({}));
+        const r = await modDeleteSubmission(sql, submissionId);
+        return json(r.body, r.status);
       }
     }
     if (url.pathname.startsWith("/api/groups/") && url.pathname.endsWith("/history")) {

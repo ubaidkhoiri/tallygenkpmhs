@@ -74,3 +74,17 @@ export async function modClearOverride(sql, groupId) {
   await audit(sql, "clear_override", groupId, "");
   return { status: 200, body: { status: "ok" } };
 }
+
+// Hapus permanen satu submission. Pin gantung dilepas, id masuk blocklist
+// agar reconcile tak masukkan lagi, semua tercatat di audit.
+export async function modDeleteSubmission(sql, submissionId) {
+  if (!submissionId) return { status: 400, body: { status: "error", message: "submissionId wajib" } };
+  const rows = await sql`SELECT kelompok_norm FROM submissions WHERE id = ${submissionId}`;
+  if (rows.length === 0) return { status: 404, body: { status: "error", message: "submission tak ada" } };
+  const groupId = rows[0].kelompok_norm;
+  await sql`DELETE FROM group_pins WHERE submission_id = ${submissionId}`;
+  await sql`DELETE FROM submissions WHERE id = ${submissionId}`;
+  await sql`INSERT INTO deleted_submissions (submission_id) VALUES (${submissionId}) ON CONFLICT DO NOTHING`;
+  await audit(sql, "delete-submission", groupId, submissionId);
+  return { status: 200, body: { status: "ok" } };
+}
