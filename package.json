@@ -3,11 +3,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/",
-    "migrate": "node scripts/migrate.mjs"
-  },
-  "dependencies": {
-    "@neondatabase/serverless": "^1.0.2"
+    "test": "node --test tests/normalize.test.mjs",
+    "migrate": "node scripts/migrate.mjs",
+    "inspect": "node scripts/inspect.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0"
