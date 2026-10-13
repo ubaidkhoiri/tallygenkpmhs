@@ -39,7 +39,8 @@ async function handleWebhook(request, env) {
     return json({ status: "error", message: "body bukan JSON" }, 400);
   }
   const sub = body.submission ?? body.data?.submission ?? body.data ?? body;
-  if (!sub || !sub.id || !Array.isArray(sub.answers)) {
+  const hasAnswers = Array.isArray(sub.answers) || Array.isArray(sub.responses);
+  if (!sub || !sub.id || !hasAnswers) {
     return json({ status: "error", message: "bentuk event tak dikenal" }, 400);
   }
   try {

@@ -43,3 +43,20 @@ test("checkbox persetujuan dicentang = confirmed", () => {
   assert.equal(r.groupId, "wates--bojong");
   assert.equal(r.dataMahasiswa, "Kosong");
 });
+
+test("bentuk API asli responses + answer array terbaca", () => {
+  const sub = {
+    id: "Nqvgpz0", formId: "RGXQKl", submittedAt: "2026-10-13T16:13:10.000Z",
+    responses: [
+      { questionId: "KP1EAA", answer: "tes" },
+      { questionId: "LEprBj", answer: ["Pengasih"] },
+      { questionId: "p0OEXq", answer: ["Girinyono"] },
+      { questionId: "1bVezQ", answer: "tes data" },
+      { questionId: "MrR4lp", answer: ["am-ID-1"] },
+    ],
+  };
+  const r = normalizeSubmission(sub, { nama: "KP1EAA", desa: "LEprBj", kelompok: "p0OEXq", data: "1bVezQ", persetujuan: "MrR4lp" });
+  assert.equal(r.nama, "tes");
+  assert.equal(r.groupId, "pengasih--girinyono");
+  assert.equal(r.dataMahasiswa, "tes data");
+});

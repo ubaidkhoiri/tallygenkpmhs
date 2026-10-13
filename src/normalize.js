@@ -17,10 +17,11 @@ export function matchGroup(desaRaw, kelompokRaw) {
 }
 
 export function answerText(submission, questionId) {
-  const a = (submission.answers ?? []).find((x) => x.questionId === questionId);
+  const list = submission.answers ?? submission.responses ?? [];
+  const a = list.find((x) => x.questionId === questionId);
   if (!a) return "";
   const flat = (v) => Array.isArray(v) ? v.map(flat).join(", ") : (v && typeof v === "object" ? (v.text ?? v.label ?? v.option ?? "") : String(v ?? ""));
-  return flat(a.text ?? a.value ?? a.option ?? a.options ?? "");
+  return flat(a.answer ?? a.text ?? a.value ?? a.option ?? a.options ?? "");
 }
 
 export function normalizeSubmission(sub, fieldIds) {
