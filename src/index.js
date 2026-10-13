@@ -1,5 +1,6 @@
 import { db } from "./db.js";
 import { buildDashboard } from "./dashboard.js";
+import { isMod, modLogin, modPin, modUnpin, modOverride, modClearOverride } from "./mod.js";
 import { upsertSubmission, reconcileAll } from "./sync.js";
 
 const json = (data, status = 200) =>
@@ -70,6 +71,50 @@ export default {
         return json({ status: "error", message: "method not allowed" }, 405);
       }
       return handleWebhook(request, env);
+    }
+    if (url.pathname === "/api/mod/login" && request.method === "POST") {
+      const r = await modLogin(request, env);
+      const headers = { "content-type": "application/json; charset=utf-8" };
+      if (r.cookie) headers["set-cookie"] = r.cookie;
+      return new Response(JSON.stringify(r.body), { status: r.status, headers });
+    }
+    if (url.pathname === "/api/mod/logout" && request.method === "POST") {
+      return new Response(JSON.stringify({ status: "ok" }), {
+        status: 200,
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+          "set-cookie": "mod=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0",
+        },
+      });
+    }
+    if (url.pathname.startsWith("/api/mod/")) {
+      if (!(await isMod(request, env))) {
+        return json({ status: "error", message: "butuh login MOD" }, 401);
+      }
+      const sql = db(env);
+      if (url.pathname === "/api/mod/pin" && request.method === "POST") {
+        const r = await modPin(sql, await request.json().catch(() => ({})));
+        return json(r.body, r.status);
+      }
+      if (url.pathname === "/api/mod/unpin" && request.method === "POST") {
+        const { groupId } = await request.json().catch(() => ({}));
+        const r = await modUnpin(sql, groupId);
+        return json(r.body, r.status);
+      }
+      if (url.pathname === "/api/mod/override" && request.method === "POST") {
+        const r = await modOverride(sql, await request.json().catch(() => ({})));
+        return json(r.body, r.status);
+      }
+      if (url.pathname === "/api/mod/override" && request.method === "DELETE") {
+        const { groupId } = await request.json().catch(() => ({}));
+        const r = await modClearOverride(sql, groupId);
+        return json(r.body, r.status);
+      }
+      if (url.pathname === "/api/mod/audit" && request.method === "GET") {
+        const limit = Math.min(Number(url.searchParams.get("limit") ?? 50) || 50, 200);
+        const rows = await sql`SELECT id, action, group_id, detail, created_at FROM mod_audit ORDER BY id DESC LIMIT ${limit}`;
+        return json({ status: "ok", audit: rows });
+      }
     }
     if (url.pathname.startsWith("/api/")) {
       return json({ status: "error", message: "not found" }, 404);

@@ -7,6 +7,7 @@ import {
   openDetail,
   closeDetail,
 } from "./render.js";
+import { initMod } from "./mod.js";
 
 ("use strict");
 
@@ -430,6 +431,7 @@ function init() {
     if (e.key === "Escape") closeDetail($("detailOverlay"));
   });
   fetchDashboard().then(applyRemote);
+  initMod();
 }
 
 init();
